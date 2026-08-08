@@ -9,7 +9,7 @@ from ..vector_stores import BaseVectorStore
 from .base_retriever import BaseRetriever
 
 
-class MockRetriever(BaseRetriever):
+class Retriever(BaseRetriever):
 
     def __init__(
         self,

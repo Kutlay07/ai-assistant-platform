@@ -2,7 +2,7 @@ from ..core.embedders import SentenceTransformerEmbedder
 from ..core.llms import MockLLM
 from ..core.memory import MockMemory
 from ..core.prompts import PromptBuilder
-from ..core.retrievers import MockRetriever
+from ..core.retrievers import Retriever
 from ..core.services import SearchService
 from ..core.vector_stores import MockVectorStore
 from ..core.workflows import RAGWorkflow
@@ -12,7 +12,7 @@ embedder = SentenceTransformerEmbedder()
 
 vector_store = MockVectorStore()
 
-retriever = MockRetriever(
+retriever = Retriever(
     embedder=embedder,
     vector_store=vector_store,
 )

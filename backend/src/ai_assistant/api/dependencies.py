@@ -4,7 +4,7 @@ from ai_assistant.core.embedders import SentenceTransformerEmbedder
 from ai_assistant.core.llms import create_llm
 from ai_assistant.core.models import Chunk
 from ai_assistant.core.prompts import PromptBuilder
-from ai_assistant.core.retrievers import MockRetriever
+from ai_assistant.core.retrievers import Retriever
 from ai_assistant.core.services import SearchService
 from ai_assistant.core.vector_stores import PostgreSQLVectorStore
 from ai_assistant.core.workflows import ChatWorkflow, RAGWorkflow
@@ -24,25 +24,13 @@ def get_memory() -> FileMemory:
 
 
 def create_search_service() -> SearchService:
-    chunks = [
-        Chunk(
-            content="FastAPI is a modern Python web framework.",
-        ),
-        Chunk(
-            content="RAG combines retrieval with language models.",
-        ),
-        Chunk(
-            content="Groq provides an OpenAI-compatible API.",
-        ),
-    ]
-
     embedder = SentenceTransformerEmbedder()
 
     vector_store = PostgreSQLVectorStore(
         settings.postgres_connection_string,
     )
 
-    retriever = MockRetriever(
+    retriever = Retriever(
         embedder=embedder,
         vector_store=vector_store,
     )
