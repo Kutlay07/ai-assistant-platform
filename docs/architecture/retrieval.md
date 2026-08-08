@@ -122,7 +122,7 @@ The assistant communicates through the `BaseRetriever` abstraction.
 
 ### Current Implementations
 
-- `MockRetriever`
+- `Retriever`
 
 ### Planned Implementations
 
@@ -132,9 +132,9 @@ The assistant communicates through the `BaseRetriever` abstraction.
 
 
 
-### MockRetriever
+### Retriever
 
-`MockRetriever` is intended for development and testing.
+`Retriever` is intended for development and testing.
 
 It retrieves chunks by combining the configured embedder and vector store without relying on external retrieval systems.
 

@@ -1,8 +1,8 @@
 from .base_retriever import BaseRetriever
-from .mock_retriever import MockRetriever
+from .retriever import Retriever
 
 
 __all__=[
     "BaseRetriever",
-    "MockRetriever"
+    "Retriever"
 ]

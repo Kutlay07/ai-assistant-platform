@@ -41,7 +41,7 @@ class PostgreSQLVectorStore(BaseVectorStore):
                 """
                 SELECT content
                 FROM chunks
-                ORDER BY embedding <=> %s
+                ORDER BY embedding <=> %s::vector
                 LIMIT %s
                 """,
                 (embedding, top_k),
