@@ -12,21 +12,19 @@ from ai_assistant.core.retrievers import (
 )
 from ai_assistant.core.services import SearchService
 from ai_assistant.core.vector_stores import PostgreSQLVectorStore
+from ai_assistant.core.memory import FileMemory
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # --- STARTUP PHASE ---
-    # 1. Initialize heavy shared ML embedder model once on application startup
+
     embedder = SentenceTransformerEmbedder()
 
-    # 2. Initialize PostgreSQL vector store connection (Fail-Fast if DB is down)
     vector_store = PostgreSQLVectorStore(
         settings.postgres_connection_string,
     )
     chunks = vector_store.get_all_chunks()
 
-    # 3. Initialize retrievers
     semantic_retriever = SemanticRetriever(
         embedder=embedder,
         vector_store=vector_store,
@@ -41,20 +39,17 @@ async def lifespan(app: FastAPI):
         bm25_retriever=bm25_retriever,
     )
 
+    memory = FileMemory(settings.memory_path)
+
     search_service = SearchService(
         retriever=hybrid_retriever,
     )
 
-    # 4. Store shared singletons on application state
-    app.state.embedder = embedder
-    app.state.vector_store = vector_store
-    app.state.bm25_retriever = bm25_retriever
     app.state.search_service = search_service
+    app.state.memory = memory
 
     yield
 
-    # --- SHUTDOWN PHASE ---
-    # Gracefully close database connection
     if hasattr(vector_store, "close"):
         vector_store.close()
 

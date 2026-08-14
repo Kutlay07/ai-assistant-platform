@@ -1,7 +1,6 @@
 from fastapi import Request
 
 from ai_assistant.core.assistant import Assistant
-from ai_assistant.core.config import settings
 from ai_assistant.core.llms import create_llm
 from ai_assistant.core.memory import FileMemory
 from ai_assistant.core.prompts import PromptBuilder
@@ -10,10 +9,8 @@ from ai_assistant.core.tools import MockTool, ToolRegistry
 from ai_assistant.core.workflows import ChatWorkflow, RAGWorkflow
 
 
-def get_memory() -> FileMemory:
-    return FileMemory(
-        settings.memory_path,
-    )
+def get_memory(request: Request) -> FileMemory:
+    return request.app.state.memory
 
 
 def get_tool_registry() -> ToolRegistry:
@@ -33,7 +30,7 @@ def get_assistant(request: Request) -> Assistant:
     workflow = ChatWorkflow(
         llm=create_llm(),
         prompt_builder=PromptBuilder(),
-        memory=get_memory(),
+        memory=get_memory(request),
     )
 
     return Assistant(
@@ -47,7 +44,7 @@ def get_rag_assistant(request: Request) -> Assistant:
         llm=create_llm(),
         prompt_builder=PromptBuilder(),
         search_service=get_search_service(request),
-        memory=get_memory(),
+        memory=get_memory(request),
     )
 
     return Assistant(
