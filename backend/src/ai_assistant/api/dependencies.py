@@ -1,89 +1,56 @@
+from fastapi import Request
+
 from ai_assistant.core.assistant import Assistant
-
-from ai_assistant.core.embedders import SentenceTransformerEmbedder
-from ai_assistant.core.llms import create_llm
-from ai_assistant.core.prompts import PromptBuilder
-from ai_assistant.core.retrievers import (
-    SemanticRetriever,
-    BM25Retriever,
-    HybridRetriever,
-)
-from ai_assistant.core.services import SearchService
-from ai_assistant.core.vector_stores import PostgreSQLVectorStore
-from ai_assistant.core.workflows import ChatWorkflow, RAGWorkflow
-from ai_assistant.core.tools import ToolRegistry, MockTool
-from ai_assistant.core.memory import FileMemory
 from ai_assistant.core.config import settings
+from ai_assistant.core.llms import create_llm
+from ai_assistant.core.memory import FileMemory
+from ai_assistant.core.prompts import PromptBuilder
+from ai_assistant.core.services import SearchService
+from ai_assistant.core.tools import MockTool, ToolRegistry
+from ai_assistant.core.workflows import ChatWorkflow, RAGWorkflow
 
 
-def create_memory() -> FileMemory:
+def get_memory() -> FileMemory:
     return FileMemory(
         settings.memory_path,
     )
 
 
-def get_memory() -> FileMemory:
-    return create_memory()
-
-
-def create_search_service() -> SearchService:
-    embedder = SentenceTransformerEmbedder()
-
-    vector_store = PostgreSQLVectorStore(
-        settings.postgres_connection_string,
-    )
-    
-    chunks = vector_store.get_all_chunks()
-
-    semantic_retriever = SemanticRetriever(
-        embedder=embedder,
-        vector_store=vector_store,
-    )
-    
-    bm25_retriever = BM25Retriever()
-    
-    bm25_retriever.build_index(chunks)
-    
-    retriever = HybridRetriever(
-        vector_retriever=semantic_retriever,
-        bm25_retriever=bm25_retriever,
-    )
-
-    return SearchService(
-        retriever=retriever,
-    )
-
-
-def create_tool_registry() -> ToolRegistry:
+def get_tool_registry() -> ToolRegistry:
     registry = ToolRegistry()
-    
     registry.register(MockTool())
-    
     return registry
 
 
-def get_assistant() -> Assistant:
+def get_search_service(request: Request) -> SearchService:
+    try:
+        return request.app.state.search_service
+    except AttributeError:
+        raise RuntimeError("SearchService is not initialized on app.state.")
+
+
+def get_assistant(request: Request) -> Assistant:
     workflow = ChatWorkflow(
         llm=create_llm(),
         prompt_builder=PromptBuilder(),
-        memory=create_memory(),
+        memory=get_memory(),
     )
 
     return Assistant(
         workflow,
-        tool_registry=create_tool_registry(),
-        )
+        tool_registry=get_tool_registry(),
+    )
 
 
-def get_rag_assistant() -> Assistant:
+def get_rag_assistant(request: Request) -> Assistant:
     workflow = RAGWorkflow(
         llm=create_llm(),
         prompt_builder=PromptBuilder(),
-        search_service=create_search_service(),
-        memory=create_memory(),
+        search_service=get_search_service(request),
+        memory=get_memory(),
     )
 
     return Assistant(
         workflow,
-        tool_registry=create_tool_registry(),
-        )
+        tool_registry=get_tool_registry(),
+    )

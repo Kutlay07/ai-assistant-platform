@@ -1,9 +1,22 @@
-from ai_assistant.api.dependencies import get_assistant
+from ai_assistant.core.assistant import Assistant
+from ai_assistant.core.llms import MockLLM
+from ai_assistant.core.memory import MockMemory
 from ai_assistant.core.models import ToolCall
+from ai_assistant.core.prompts import PromptBuilder
+from ai_assistant.core.tools import MockTool, ToolRegistry
+from ai_assistant.core.workflows import ChatWorkflow
 
 
 def test_assistant_executes_registered_tool():
-    assistant = get_assistant()
+    registry = ToolRegistry()
+    registry.register(MockTool())
+
+    workflow = ChatWorkflow(
+        llm=MockLLM(),
+        prompt_builder=PromptBuilder(),
+        memory=MockMemory(),
+    )
+    assistant = Assistant(workflow, tool_registry=registry)
 
     result = assistant.execute_tool(
         ToolCall(
