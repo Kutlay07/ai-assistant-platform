@@ -17,6 +17,8 @@ def test_add_inserts_embedded_chunks(mock_connect, mock_register_vector):
     mock_connect.return_value = connection
 
     store = PostgreSQLVectorStore(CONNECTION_STRING)
+    cursor.reset_mock()
+    connection.commit.reset_mock()
 
     chunk = Chunk(
         content="Hello world",
@@ -36,6 +38,7 @@ def test_add_rejects_chunk_without_embedding(mock_connect, mock_register_vector)
     mock_connect.return_value = connection
 
     store = PostgreSQLVectorStore(CONNECTION_STRING)
+    connection.commit.reset_mock()
 
     chunk = Chunk(
         content="Hello world",
@@ -60,6 +63,7 @@ def test_search_returns_chunks(mock_connect, mock_register_vector):
     mock_connect.return_value = connection
 
     store = PostgreSQLVectorStore(CONNECTION_STRING)
+    cursor.reset_mock()
 
     results = store.search(
         embedding=[0.1, 0.2, 0.3],

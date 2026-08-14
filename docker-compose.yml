@@ -3,8 +3,18 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+
     ports:
       - "8000:8000"
+
+    env_file:
+      - .env
+
+    environment:
+      HF_HOME: /root/.cache/huggingface
+
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
 
   frontend:
     build:
@@ -31,3 +41,4 @@ services:
 
 volumes:
   postgres_data:
+  huggingface_cache:

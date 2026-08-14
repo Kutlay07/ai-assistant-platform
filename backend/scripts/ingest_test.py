@@ -8,7 +8,7 @@ from ai_assistant.core.vector_stores.postgresql_vector_store import PostgreSQLVe
 loader = TextLoader()
 
 document = loader.load(
-    "data\\test.txt"
+    "data/test.txt"
 )
 
 splitter = TextSplitter(
