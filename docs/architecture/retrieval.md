@@ -12,7 +12,7 @@ The retrieval system consists of:
 - `TextSplitter`
 - `Embedder`
 - `VectorStore`
-- `Retriever`
+- `SemanticRetriever`
 
 
 
@@ -107,9 +107,9 @@ Characteristics:
 
 
 
-## Retriever
+## SemanticRetriever
 
-Retrievers locate the most relevant document chunks for a query.
+SemanticRetrievers locate the most relevant document chunks for a query.
 
 They combine embedding generation and vector search while remaining independent from concrete providers.
 
@@ -122,19 +122,19 @@ The assistant communicates through the `BaseRetriever` abstraction.
 
 ### Current Implementations
 
-- `Retriever`
+- `SemanticRetriever`
 
 ### Planned Implementations
 
-- `SemanticRetriever`
-- `HybridRetriever`
-- `MultiVectorRetriever`
+- `SemanticSemanticRetriever`
+- `HybridSemanticRetriever`
+- `MultiVectorSemanticRetriever`
 
 
 
-### Retriever
+### SemanticRetriever
 
-`Retriever` is intended for development and testing.
+`SemanticRetriever` is intended for development and testing.
 
 It retrieves chunks by combining the configured embedder and vector store without relying on external retrieval systems.
 

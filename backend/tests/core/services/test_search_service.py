@@ -1,5 +1,5 @@
 from ai_assistant.core.services import SearchService
-from ai_assistant.core.retrievers import Retriever
+from ai_assistant.core.retrievers import SemanticRetriever
 from ai_assistant.core.embedders import MockEmbedder
 from ai_assistant.core.vector_stores import MockVectorStore
 from ai_assistant.core.models import Chunk
@@ -15,7 +15,7 @@ def test_search_returns_chunks():
     ])
 
     service = SearchService(
-        Retriever(
+        SemanticRetriever(
             embedder=MockEmbedder(),
             vector_store=store,
         )
@@ -35,7 +35,7 @@ def test_search_preserves_chunk_content():
     ])
 
     service = SearchService(
-        Retriever(
+        SemanticRetriever(
             embedder=MockEmbedder(),
             vector_store=store,
         )
@@ -49,7 +49,7 @@ def test_search_preserves_chunk_content():
 def test_search_returns_empty_list_when_no_chunks():
 
     service = SearchService(
-        Retriever(
+        SemanticRetriever(
             embedder=MockEmbedder(),
             vector_store=MockVectorStore(),
         )
@@ -71,7 +71,7 @@ def test_search_respects_top_k():
     ])
 
     service = SearchService(
-        Retriever(
+        SemanticRetriever(
             embedder=MockEmbedder(),
             vector_store=store,
         )

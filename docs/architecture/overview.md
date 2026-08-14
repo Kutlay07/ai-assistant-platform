@@ -44,7 +44,7 @@ Requests enter through the FastAPI API layer, are routed to the appropriate work
 | **Document Loaders** | `backend/src/ai_assistant/core/loaders/` | Document ingestion (`PDFLoader`, `TextLoader`) producing domain `Document` models |
 | **Text Splitter** | `backend/src/ai_assistant/core/splitters/` | Splitting document content into overlapping `Chunk` domain models |
 | **Embeddings & Vector Stores** | `backend/src/ai_assistant/core/embedders/`, `vector_stores/` | Vector representation generation and chunk similarity search |
-| **Retrievers & Services**| `backend/src/ai_assistant/core/retrievers/`, `services/` | `SearchService` retrieving relevant document chunks for prompt augmentation |
+| **SemanticRetrievers & Services**| `backend/src/ai_assistant/core/retrievers/`, `services/` | `SearchService` retrieving relevant document chunks for prompt augmentation |
 | **Tools & Validation** | `backend/src/ai_assistant/core/tools/` | `BaseTool`, `ToolRegistry`, and `ToolCallValidator` for safe function execution |
 | **Planners** | `backend/src/ai_assistant/core/planners/` | `BasePlanner` and `RuleBasedPlanner` for multi-step agent task decomposition |
 | **API Layer** | `backend/src/ai_assistant/api/` | FastAPI application exposing `/v1/chat`, `/v1/chat/stream`, `/v1/health`, and `/v1/rag` endpoints |

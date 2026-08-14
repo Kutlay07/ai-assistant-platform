@@ -61,7 +61,7 @@ RAGWorkflow
 SearchService
    │
    ▼
-Retriever
+SemanticRetriever
    │
    ▼
 Vector Store

@@ -54,8 +54,8 @@ def test_search_returns_chunks(mock_connect, mock_register_vector):
     connection = MagicMock()
     cursor = connection.cursor.return_value.__enter__.return_value
     cursor.fetchall.return_value = [
-        ("First result",),
-        ("Second result",),
+        (1, "First result",),
+        (2, "Second result",),
     ]
     mock_connect.return_value = connection
 
