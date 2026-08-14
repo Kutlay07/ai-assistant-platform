@@ -1,8 +1,12 @@
 from .base_retriever import BaseRetriever
-from .retriever import Retriever
+from .semantic_retriever import SemanticRetriever
+from .bm25_retriever import BM25Retriever
+from .hybrid_retriever import HybridRetriever
 
 
 __all__=[
     "BaseRetriever",
-    "Retriever"
+    "SemanticRetriever",
+    "BM25Retriever",
+    "HybridRetriever",
 ]

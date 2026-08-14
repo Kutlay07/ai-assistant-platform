@@ -1,0 +1,9 @@
+FastAPI is a modern Python web framework.
+
+PostgreSQL is a relational database system.
+
+Redis is an in-memory data store used for caching.
+
+Retrieval-Augmented Generation combines document retrieval with language models.
+
+Docker allows applications and their dependencies to run inside containers.

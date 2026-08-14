@@ -3,7 +3,7 @@ from ai_assistant.core.memory import MockMemory
 from ai_assistant.core.models import Request, Response
 from ai_assistant.core.prompts import PromptBuilder
 from ai_assistant.core.services import SearchService
-from ai_assistant.core.retrievers import Retriever
+from ai_assistant.core.retrievers import SemanticRetriever
 from ai_assistant.core.embedders import MockEmbedder
 from ai_assistant.core.vector_stores import MockVectorStore
 from ai_assistant.core.workflows import RAGWorkflow
@@ -16,7 +16,7 @@ def test_run_returns_response():
         llm=MockLLM(),
         prompt_builder=PromptBuilder(),
         search_service=SearchService(
-            Retriever(
+            SemanticRetriever(
                 embedder=MockEmbedder(),
                 vector_store=MockVectorStore(),
             )
@@ -37,7 +37,7 @@ def test_run_stores_conversation():
         llm=MockLLM(),
         prompt_builder=PromptBuilder(),
         search_service=SearchService(
-            Retriever(
+            SemanticRetriever(
                 embedder=MockEmbedder(),
                 vector_store=MockVectorStore(),
             )
@@ -64,7 +64,7 @@ def test_run_uses_retrieved_context():
         llm=MockLLM(),
         prompt_builder=PromptBuilder(),
         search_service=SearchService(
-            Retriever(
+            SemanticRetriever(
                 embedder=MockEmbedder(),
                 vector_store=store,
             )
@@ -85,7 +85,7 @@ def test_run_builds_rag_prompt():
         llm=MockLLM(),
         prompt_builder=PromptBuilder(),
         search_service=SearchService(
-            Retriever(
+            SemanticRetriever(
                 embedder=MockEmbedder(),
                 vector_store=MockVectorStore(),
             )

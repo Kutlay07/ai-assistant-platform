@@ -48,7 +48,7 @@ The project is developed incrementally through milestone-based releases. Each mi
 - Document and chunk models
 - Embedder abstraction (`BaseEmbedder`)
 - Vector store abstraction (`BaseVectorStore`)
-- Retriever architecture (`SearchService`)
+- SemanticRetriever architecture (`SearchService`)
 
 ## v0.6.0 — Knowledge Base Ingestion
 - Document loading pipeline (`PDFLoader`, `TextLoader`)

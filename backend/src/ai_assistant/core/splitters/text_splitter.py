@@ -26,6 +26,7 @@ class TextSplitter(BaseSplitter):
         chunks: list[Chunk] = []
         
         start = 0
+        chunk_id = 0
         
         while start < len(document.text):
             end = start + self.chunk_size
@@ -35,7 +36,12 @@ class TextSplitter(BaseSplitter):
             chunks.append(
                 Chunk(
                     content=chunk_text,
-                    document=document,))
+                    document=document,
+                    chunk_id=chunk_id
+                    )
+                )
+            
+            chunk_id += 1
             
             start = end - self.overlap
 

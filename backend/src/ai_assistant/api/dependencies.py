@@ -2,9 +2,12 @@ from ai_assistant.core.assistant import Assistant
 
 from ai_assistant.core.embedders import SentenceTransformerEmbedder
 from ai_assistant.core.llms import create_llm
-from ai_assistant.core.models import Chunk
 from ai_assistant.core.prompts import PromptBuilder
-from ai_assistant.core.retrievers import Retriever
+from ai_assistant.core.retrievers import (
+    SemanticRetriever,
+    BM25Retriever,
+    HybridRetriever,
+)
 from ai_assistant.core.services import SearchService
 from ai_assistant.core.vector_stores import PostgreSQLVectorStore
 from ai_assistant.core.workflows import ChatWorkflow, RAGWorkflow
@@ -29,10 +32,21 @@ def create_search_service() -> SearchService:
     vector_store = PostgreSQLVectorStore(
         settings.postgres_connection_string,
     )
+    
+    chunks = vector_store.get_all_chunks()
 
-    retriever = Retriever(
+    semantic_retriever = SemanticRetriever(
         embedder=embedder,
         vector_store=vector_store,
+    )
+    
+    bm25_retriever = BM25Retriever()
+    
+    bm25_retriever.build_index(chunks)
+    
+    retriever = HybridRetriever(
+        vector_retriever=semantic_retriever,
+        bm25_retriever=bm25_retriever,
     )
 
     return SearchService(
