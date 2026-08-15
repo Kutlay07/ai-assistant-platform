@@ -1,8 +1,10 @@
 from dataclasses import dataclass
+from typing import Any
 
 from .plan_step import PlanStep
 
 
 @dataclass(frozen=True)
-class Plan:
-    steps: list[PlanStep]
+class StepResult:
+    step: PlanStep
+    output: Any
