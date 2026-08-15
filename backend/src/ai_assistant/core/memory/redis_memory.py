@@ -73,11 +73,19 @@ class RedisMemory(BaseMemory):
         
     def get_summary(
         self,
-    ) -> str | None:
+        ) -> str | None:
 
-        return self.client.get(
+        data = self.client.get(
             self._summary_key,
         )
+
+        if data is None:
+            return None
+
+        if isinstance(data, bytes):
+            return data.decode("utf-8")
+
+        return data
 
 
     def save_summary(
