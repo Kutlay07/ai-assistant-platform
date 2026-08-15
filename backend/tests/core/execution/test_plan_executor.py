@@ -3,10 +3,12 @@ import pytest
 from ai_assistant.core.execution import (
     PlanExecutor,
     StepExecutionError,
+    ExecutionContext,
 )
 from ai_assistant.core.execution.handlers import (
     LLMStepHandler,
     FinalResponseStepHandler,
+    BaseStepHandler,
 )
 from ai_assistant.core.llms import MockLLM
 from ai_assistant.core.models import (
@@ -15,6 +17,7 @@ from ai_assistant.core.models import (
     Request,
     StepType,
 )
+
 
 
 def test_plan_executor_executes_llm_steps():
@@ -107,7 +110,7 @@ def test_plan_executor_executes_plan_and_returns_final_response():
     )
 
 
-def test_plan_executor_stops_after_final_response():
+def test_plan_executor_does_not_execute_steps_after_final_response():
     executor = PlanExecutor(
         handlers=[
             LLMStepHandler(
@@ -216,22 +219,6 @@ def test_plan_executor_propagates_step_execution_error():
 
 
 
-from ai_assistant.core.execution import (
-    PlanExecutor,
-    StepExecutionError,
-)
-from ai_assistant.core.execution.execution_context import (
-    ExecutionContext,
-)
-from ai_assistant.core.execution.handlers import (
-    BaseStepHandler,
-)
-from ai_assistant.core.models import (
-    Plan,
-    PlanStep,
-    Request,
-    StepType,
-)
 
 
 class FailingHandler(BaseStepHandler):
@@ -273,46 +260,3 @@ def test_executor_propagates_handler_error():
                 input="Hello",
             ),
         )
-
-
-def test_executor_stops_after_final_response():
-    llm = MockLLM()
-
-    executor = PlanExecutor(
-        handlers=[
-            LLMStepHandler(llm),
-            FinalResponseStepHandler(),
-        ],
-    )
-
-    plan = Plan(
-        steps=[
-            PlanStep(
-                step_type=StepType.LLM,
-                description="Generate response",
-                metadata={"prompt": "Hello"},
-            ),
-            PlanStep(
-                step_type=StepType.FINAL_RESPONSE,
-                description="Return final response",
-            ),
-            PlanStep(
-                step_type=StepType.LLM,
-                description="Must not execute",
-                metadata={
-                    "prompt": "This must not execute",
-                },
-            ),
-        ],
-    )
-
-    context = executor.execute(
-        plan=plan,
-        request=Request(input="Hello"),
-    )
-
-    assert len(context.results) == 2
-    assert (
-        context.results[-1].step.step_type
-        == StepType.FINAL_RESPONSE
-    )

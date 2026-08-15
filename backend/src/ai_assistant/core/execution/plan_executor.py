@@ -49,9 +49,6 @@ class PlanExecutor:
             if context.is_completed():
                 break
 
-            if step.step_type == StepType.FINAL_RESPONSE:
-                break
-
         return context
 
     def _execute_step(
