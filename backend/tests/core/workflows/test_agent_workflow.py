@@ -151,16 +151,24 @@ def test_agent_workflow_requires_positive_iterations():
 
 
 class FakeLLM(BaseLLM):
-    
+
     def __init__(self, response: str):
         self.response = response
-        
+
     def generate(self, prompt: str) -> str:
         return self.response
-    
+
+    def generate_with_tools(
+        self,
+        messages,
+        tools,
+    ):
+        raise NotImplementedError
+
     def stream(self, prompt: str):
         yield self.response
-        
+
+
 def test_agent_workflow_executes_tool():
 
     execute_tool = MockExecuteTool()

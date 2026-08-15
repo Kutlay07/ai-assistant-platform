@@ -11,8 +11,9 @@ def test_valid_tool_call_passes():
     tool_call = ToolCall(
         tool_name="mock",
         arguments={
-            "query": "Hello"
+            "query": "Hello",
         },
+        call_id="call_123",
     )
 
     validator.validate(tool_call)
@@ -25,8 +26,9 @@ def test_tool_call_requires_name():
     tool_call = ToolCall(
         tool_name="",
         arguments={
-            "query": "Hello"
+            "query": "Hello",
         },
+        call_id="call_123",
     )
 
     with pytest.raises(ValueError):
@@ -40,7 +42,27 @@ def test_tool_call_requires_arguments():
     tool_call = ToolCall(
         tool_name="mock",
         arguments={},
+        call_id="call_123",
     )
 
     with pytest.raises(ValueError):
+        validator.validate(tool_call)
+
+
+def test_tool_call_requires_call_id():
+
+    validator = ToolCallValidator()
+
+    tool_call = ToolCall(
+        tool_name="mock",
+        arguments={
+            "query": "Hello",
+        },
+        call_id="",
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="Tool call ID cannot be empty.",
+    ):
         validator.validate(tool_call)

@@ -10,6 +10,19 @@ class BaseTool(ABC):
     def name(self) -> str:
         pass
 
+    @property
     @abstractmethod
-    def execute(self, arguments: Mapping[str, Any]) -> str:
+    def description(self) -> str:
+        pass
+
+    @property
+    @abstractmethod
+    def parameters(self) -> Mapping[str, Any]:
+        pass
+
+    @abstractmethod
+    def execute(
+        self,
+        arguments: Mapping[str, Any],
+    ) -> str:
         pass

@@ -18,4 +18,5 @@ class ToolCallParser(BaseParser):
             arguments={
                 "query": query.strip(),
             },
+            call_id="parsed_tool_call",
         )

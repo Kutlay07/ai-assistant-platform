@@ -9,6 +9,9 @@ from .plan import Plan
 from .plan_step import PlanStep
 from .step_type import StepType
 from .step_result import StepResult
+from .tool_result import ToolResult
+from .llm_message import LLMMessage
+from .llm_message_role import LLMMessageRole
 
 
 __all__ = [
@@ -23,5 +26,8 @@ __all__ = [
     "PlanStep",
     "StepType",
     "StepResult",
+    "ToolResult",
+    "LLMMessage",
+    "LLMMessageRole",
     
 ]
