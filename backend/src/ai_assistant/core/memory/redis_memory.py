@@ -26,6 +26,8 @@ class RedisMemory(BaseMemory):
 
         self.ttl = ttl
         self.key = key
+        
+        self._summary_key = f"{key}:summary"
 
 
     def get_history(self) -> list[dict[str, str]]:
@@ -54,5 +56,37 @@ class RedisMemory(BaseMemory):
         self.client.set(
             self.key,
             json.dumps(history),
+            ex=self.ttl,
+        )
+
+
+    def replace_history(
+        self,
+        history: list[dict[str, str]],
+        ) -> None:
+        
+        self.client.set(
+            self.key,
+            json.dumps(history),
+            ex=self.ttl,
+        )
+        
+    def get_summary(
+        self,
+    ) -> str | None:
+
+        return self.client.get(
+            self._summary_key,
+        )
+
+
+    def save_summary(
+        self,
+        summary: str,
+    ) -> None:
+
+        self.client.set(
+            self._summary_key,
+            summary,
             ex=self.ttl,
         )

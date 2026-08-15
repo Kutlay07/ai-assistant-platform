@@ -25,17 +25,27 @@ class RAGWorkflow(BaseWorkflow):
         self._search_service = search_service
         self._memory = memory
         
-    def _build_prompt(self, request: Request) -> str:
+        
+    def _build_prompt(
+        self,
+        request: Request,
+        ) -> str:
         history = self._memory.get_history()
-        
-        context = self._search_service.search(request.input)
-        
+
+        summary = self._memory.get_summary()
+
+        context = self._search_service.search(
+            request.input,
+        )
+
         return self._prompt_builder.build(
             request=request,
             history=history,
+            summary=summary,
             context=context,
             template="rag",
         )
+    
     
     def _save_conversation(
         self,
@@ -53,6 +63,7 @@ class RAGWorkflow(BaseWorkflow):
             response,
         )
         
+        
     def run(self, request: Request) -> Response:
         prompt = self._build_prompt(request)
         
@@ -61,6 +72,7 @@ class RAGWorkflow(BaseWorkflow):
         self._save_conversation(request, output)
         
         return Response(output=output)
+    
     
     def stream(
         self,

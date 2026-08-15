@@ -40,16 +40,21 @@ class ChatWorkflow(BaseWorkflow):
         self._tool_schemas = list(tool_schemas or [])
         self._max_tool_calls = max_tool_calls
         
+        
     def _build_prompt(
         self,
         request: Request,
-        ) -> str:
+    ) -> str:
         history = self._memory.get_history()
+
+        summary = self._memory.get_summary()
 
         return self._prompt_builder.build(
             request=request,
             history=history,
+            summary=summary,
         )
+        
         
     def _build_messages(
         self,

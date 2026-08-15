@@ -5,6 +5,10 @@ If the context contains information relevant to the user's question, prioritize 
 If the context does not contain the answer, say that you do not know based on the available context.
 
 
+Conversation Summary:
+{summary}
+
+
 Context:
 {context}
 
