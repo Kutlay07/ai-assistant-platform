@@ -22,6 +22,7 @@ def test_assistant_executes_registered_tool():
         ToolCall(
             tool_name="mock",
             arguments={"query": "hello"},
+            call_id="call_123",
         )
     )
 

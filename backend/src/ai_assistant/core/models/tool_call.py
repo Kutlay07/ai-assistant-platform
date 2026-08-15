@@ -7,3 +7,4 @@ from typing import Any
 class ToolCall:
     tool_name: str
     arguments: Mapping[str, Any]
+    call_id: str

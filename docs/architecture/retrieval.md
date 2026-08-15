@@ -126,9 +126,9 @@ The assistant communicates through the `BaseRetriever` abstraction.
 
 ### Planned Implementations
 
-- `SemanticSemanticRetriever`
-- `HybridSemanticRetriever`
-- `MultiVectorSemanticRetriever`
+- `SemanticRetriever`
+- `HybridRetriever`
+- `MultiVectorRetriever`
 
 
 

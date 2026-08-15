@@ -1,4 +1,8 @@
 from ai_assistant.core.llms import BaseLLM
+from typing import Any
+from collections.abc import Sequence
+
+from ai_assistant.core.models import ToolCall
 
 
 class DummyLLM(BaseLLM):
@@ -7,6 +11,16 @@ class DummyLLM(BaseLLM):
     
     def stream(self, prompt):
         yield self.generate(prompt)
+        
+    def generate_with_tools(
+    self,
+    prompt: str,
+    tools: Sequence[dict[str, Any]],
+    ) -> str | ToolCall:
+        
+        return self.generate(
+            prompt,
+        )
 
 def test_base_llm_generate():
     llm = DummyLLM()
