@@ -23,17 +23,6 @@ def test_mock_llm_generate_with_tools_returns_response():
     llm = MockLLM()
 
     result = llm.generate_with_tools(
-        prompt="Hello",
-        tools=[],
-    )
-
-    assert result == "Mock response: Hello"
-
-
-def test_mock_llm_generate_with_tools_returns_response():
-    llm = MockLLM()
-
-    result = llm.generate_with_tools(
         messages=[
             LLMMessage(
                 role=LLMMessageRole.USER,
