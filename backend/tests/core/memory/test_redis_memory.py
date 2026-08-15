@@ -60,3 +60,61 @@ def test_get_history_returns_empty_when_missing():
     result = memory.get_history()
 
     assert result == []
+
+
+def test_save_summary_stores_summary():
+
+    memory = RedisMemory(client=MagicMock())
+
+    memory.client.set.return_value = True
+
+    memory.save_summary(
+        "User is learning AI engineering."
+    )
+
+    memory.client.set.assert_called_once_with(
+        "conversation:summary",
+        "User is learning AI engineering.",
+        ex=3600,
+    )
+
+
+def test_get_summary_returns_summary():
+
+    memory = RedisMemory(client=MagicMock())
+
+    memory.client.get.return_value = (
+        "User is learning AI engineering."
+    )
+
+    result = memory.get_summary()
+
+    assert result == (
+        "User is learning AI engineering."
+    )
+
+
+def test_get_summary_decodes_bytes():
+
+    memory = RedisMemory(client=MagicMock())
+
+    memory.client.get.return_value = (
+        b"User is learning AI engineering."
+    )
+
+    result = memory.get_summary()
+
+    assert result == (
+        "User is learning AI engineering."
+    )
+
+
+def test_get_summary_returns_none_when_missing():
+
+    memory = RedisMemory(client=MagicMock())
+
+    memory.client.get.return_value = None
+
+    result = memory.get_summary()
+
+    assert result is None

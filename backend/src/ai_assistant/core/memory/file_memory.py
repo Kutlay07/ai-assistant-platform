@@ -14,6 +14,10 @@ class FileMemory(BaseMemory):
             exist_ok=True,
         )
         
+        self._summary_path = path.with_name(
+            f"{path.stem}_summary{path.suffix}"
+        )
+        
         
     def _load_messages(self) -> list[dict[str, str]]:
         if not self._path.exists():
@@ -51,12 +55,14 @@ class FileMemory(BaseMemory):
                 ensure_ascii=False,
             )
         
+        
     def get_history(self) -> list[dict[str, str]]:
         return self._load_messages()
         
         
     def get_messages(self) -> list[dict[str, str]]:
         return self._load_messages()
+        
         
     def add_message(self, role: str, content: str) -> None:
         messages = self._load_messages()
@@ -69,3 +75,36 @@ class FileMemory(BaseMemory):
         )
         
         self._save_messages(messages)
+
+
+    def replace_history(
+        self,
+        history: list[dict[str, str]],
+    ) -> None:
+        self._save_messages(history)
+
+
+    def get_summary(
+        self,
+    ) -> str | None:
+
+        if not self._summary_path.exists():
+            return None
+
+        with self._summary_path.open(
+            "r",
+            encoding="utf-8",
+        ) as file:
+            return file.read()
+
+
+    def save_summary(
+        self,
+        summary: str,
+    ) -> None:
+
+        with self._summary_path.open(
+            "w",
+            encoding="utf-8",
+        ) as file:
+            file.write(summary)

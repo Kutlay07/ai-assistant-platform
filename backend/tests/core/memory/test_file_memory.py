@@ -83,3 +83,15 @@ def test_memory_preserves_roles(tmp_path):
             "content": "Hello first",
         }
     ]
+
+
+def test_save_and_get_summary(tmp_path):
+    memory = FileMemory(tmp_path / "memory.json")
+
+    memory.save_summary(
+        "User is learning AI engineering."
+    )
+
+    assert memory.get_summary() == (
+        "User is learning AI engineering."
+    )

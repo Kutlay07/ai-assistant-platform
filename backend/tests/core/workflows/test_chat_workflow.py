@@ -299,3 +299,65 @@ def test_chat_workflow_stops_after_max_tool_calls():
                 input="Hello",
             ),
         )
+
+
+def test_chat_workflow_includes_memory_summary():
+
+    memory = MockMemory()
+
+    memory.save_summary(
+        "User is learning AI engineering.",
+    )
+
+    workflow = ChatWorkflow(
+        llm=MockLLM(),
+        prompt_builder=PromptBuilder(),
+        memory=memory,
+    )
+
+    response = workflow.run(
+        Request(
+            input="What should I learn next?",
+        ),
+    )
+
+    assert (
+        "User is learning AI engineering."
+        in response.output
+    )
+
+
+def test_chat_workflow_uses_summary_and_recent_history():
+
+    memory = MockMemory()
+
+    memory.save_summary(
+        "User has been learning Python and AI engineering.",
+    )
+
+    memory.add_message(
+        "user",
+        "Now I am learning transformers.",
+    )
+
+    workflow = ChatWorkflow(
+        llm=MockLLM(),
+        prompt_builder=PromptBuilder(),
+        memory=memory,
+    )
+
+    response = workflow.run(
+        Request(
+            input="What should I learn next?",
+        ),
+    )
+
+    assert (
+        "User has been learning Python and AI engineering."
+        in response.output
+    )
+
+    assert (
+        "Now I am learning transformers."
+        in response.output
+    )

@@ -98,3 +98,77 @@ def test_run_builds_rag_prompt():
     )
 
     assert "Context:" in response.output
+
+
+def test_rag_workflow_includes_memory_summary():
+
+    memory = MockMemory()
+
+    memory.save_summary(
+        "User is learning AI engineering.",
+    )
+
+    workflow = RAGWorkflow(
+        llm=MockLLM(),
+        prompt_builder=PromptBuilder(),
+        search_service=SearchService(
+            SemanticRetriever(
+                embedder=MockEmbedder(),
+                vector_store=MockVectorStore(),
+            )
+        ),
+        memory=memory,
+    )
+
+    response = workflow.run(
+        Request(
+            input="What should I learn next?",
+        ),
+    )
+
+    assert (
+        "User is learning AI engineering."
+        in response.output
+    )
+
+
+def test_rag_workflow_uses_summary_and_recent_history():
+
+    memory = MockMemory()
+
+    memory.save_summary(
+        "User has been learning Python and AI engineering.",
+    )
+
+    memory.add_message(
+        "user",
+        "Now I am learning transformers.",
+    )
+
+    workflow = RAGWorkflow(
+        llm=MockLLM(),
+        prompt_builder=PromptBuilder(),
+        search_service=SearchService(
+            SemanticRetriever(
+                embedder=MockEmbedder(),
+                vector_store=MockVectorStore(),
+            )
+        ),
+        memory=memory,
+    )
+
+    response = workflow.run(
+        Request(
+            input="What should I learn next?",
+        ),
+    )
+
+    assert (
+        "User has been learning Python and AI engineering."
+        in response.output
+    )
+
+    assert (
+        "Now I am learning transformers."
+        in response.output
+    )

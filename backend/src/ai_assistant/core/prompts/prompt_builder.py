@@ -21,7 +21,8 @@ class PromptBuilder:
         history: Sequence[dict[str, str]],
         current_step: str | None = None,
         template: str = "chat",
-        context: list[Chunk] | None = None
+        context: list[Chunk] | None = None,
+        summary: str | None = None,
     ) -> str:
         template_text = self._load_template(template)
 
@@ -39,6 +40,7 @@ class PromptBuilder:
 
         return template_text.format(
             history=history_text,
+            summary=summary or "",
             input=request.input,
             current_step=current_step or "",
             context=context_text,

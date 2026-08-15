@@ -58,3 +58,16 @@ def test_prompt_contains_current_step():
 
     assert "Current Step:" in prompt
     assert "Process request: Hello" in prompt
+
+
+def test_prompt_builder_includes_summary():
+
+    builder = PromptBuilder()
+
+    prompt = builder.build(
+        request=Request(input="What should I learn next?"),
+        history=[],
+        summary="User is learning AI engineering.",
+    )
+
+    assert "User is learning AI engineering." in prompt

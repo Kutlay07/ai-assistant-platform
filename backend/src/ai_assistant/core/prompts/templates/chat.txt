@@ -1,5 +1,8 @@
 You are a helpful AI assistant.
 
+Conversation Summary:
+{summary}
+
 Conversation History:
 {history}
 
