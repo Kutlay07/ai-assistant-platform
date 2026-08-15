@@ -6,6 +6,10 @@ from .retrieval_options import RetrievalOptions
 from .tool_selection import ToolSelection
 from .tool_call import ToolCall
 from .plan import Plan
+from .plan_step import PlanStep
+from .step_type import StepType
+from .step_result import StepResult
+
 
 __all__ = [
     "Request",
@@ -16,4 +20,8 @@ __all__ = [
     "ToolSelection",
     "ToolCall",
     "Plan",
+    "PlanStep",
+    "StepType",
+    "StepResult",
+    
 ]
