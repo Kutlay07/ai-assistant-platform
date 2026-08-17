@@ -51,7 +51,7 @@ Requirements: Docker and Docker Compose.
 git clone https://github.com/Kutlay07/ai-assistant-platform.git
 cd ai-assistant-platform
 
-cp .env.example .env      # then set LLM_API_KEY (or use LLM_PROVIDER=mock)
+cp .env.example .env      # runs on the mock provider; set LLM_API_KEY + LLM_PROVIDER=groq for real answers
 
 docker compose up
 ```

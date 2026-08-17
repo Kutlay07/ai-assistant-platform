@@ -10,9 +10,15 @@ class BM25Retriever(BaseRetriever):
     def __init__(self):
         self.bm25 = None
         self.chunks = []
+        self.indexed = False
         
     def build_index(self, chunks: list[Chunk]):
         self.chunks = chunks
+        self.indexed = True
+        
+        if not chunks:
+            self.bm25 = None
+            return
         
         tokenized_chunks = [
             chunk.content.lower().split()
@@ -32,8 +38,11 @@ class BM25Retriever(BaseRetriever):
         
         query_tokens = query.lower().split()
         
-        if self.bm25 is None:
+        if not self.indexed:
             raise ValueError("BM25 index has not been built.")
+        
+        if not self.chunks:
+            return []
         
         scores = self.bm25.get_scores(query_tokens)
         

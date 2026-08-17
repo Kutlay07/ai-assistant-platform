@@ -31,8 +31,7 @@ async def lifespan(app: FastAPI):
     )
 
     bm25_retriever = BM25Retriever()
-    if chunks:
-        bm25_retriever.build_index(chunks)
+    bm25_retriever.build_index(chunks)
 
     hybrid_retriever = HybridRetriever(
         vector_retriever=semantic_retriever,
