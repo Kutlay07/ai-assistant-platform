@@ -121,12 +121,23 @@ Principles:
 
 # Running the Application
 
-The project is structured as a monorepo consisting of two separate applications:
+The complete stack (backend, frontend, PostgreSQL + pgvector) is orchestrated with Docker
+Compose and is the recommended way to run the project:
 
-* **Backend** — FastAPI (`backend/`)
-* **Frontend** — React 19 + TypeScript (`frontend/`)
+```bash
+cp .env.example .env
+docker compose up
+```
 
-Both applications should be running during local development.
+The sections below describe running the backend and the frontend directly, which is useful
+when iterating on a single component.
+
+Requirements for local execution:
+
+* Python 3.11+
+* Node.js 22+
+* A reachable PostgreSQL instance with the `vector` extension available
+  (`docker compose up postgres` is the simplest option)
 
 ---
 
@@ -154,7 +165,14 @@ source .venv/bin/activate
 Install dependencies:
 
 ```bash
-pip install -r requirements.txt
+pip install -e ".[dev]"
+```
+
+Configure the environment (the backend reads a `.env` file from the working directory):
+
+```bash
+cp ../.env.example .env
+# for local execution, point POSTGRES_CONNECTION_STRING at localhost
 ```
 
 Start the development server:
@@ -207,8 +225,10 @@ http://127.0.0.1:5173
 During development:
 
 * Run both the backend and frontend simultaneously.
-* The frontend communicates with the backend through the `/v1/chat` and `/v1/chat/stream` endpoints.
-* Chat responses are streamed in real time via SSE.
+* The frontend communicates with the backend through the `/api/v1/chat` and
+  `/api/v1/chat/stream` endpoints.
+* Streaming responses are delivered as a chunked `text/plain` HTTP body and read in the
+  browser with `fetch` + `ReadableStream`.
 * Conversation history is persisted between sessions through the configured memory backend.
 
 ---

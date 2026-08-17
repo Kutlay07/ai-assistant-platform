@@ -8,13 +8,23 @@ services:
       - "8000:8000"
 
     env_file:
-      - .env
+      - path: .env
+        required: false
 
     environment:
       HF_HOME: /root/.cache/huggingface
+      MEMORY_PATH: ${MEMORY_PATH:-data/conversation.json}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      POSTGRES_CONNECTION_STRING: >-
+        ${POSTGRES_CONNECTION_STRING:-postgresql://ai_assistant:ai_assistant@postgres:5432/ai_assistant}
+
+    depends_on:
+      postgres:
+        condition: service_healthy
 
     volumes:
       - huggingface_cache:/root/.cache/huggingface
+      - backend_data:/app/data
 
   frontend:
     build:
@@ -22,11 +32,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:80"
-
-  redis:
-    image: redis:8-alpine
-    ports:
-      - "6379:6379"
+    depends_on:
+      - backend
 
   postgres:
     image: pgvector/pgvector:pg17
@@ -36,9 +43,15 @@ services:
       POSTGRES_DB: ai_assistant
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ai_assistant -d ai_assistant"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
 volumes:
   postgres_data:
   huggingface_cache:
+  backend_data:

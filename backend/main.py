@@ -31,8 +31,7 @@ async def lifespan(app: FastAPI):
     )
 
     bm25_retriever = BM25Retriever()
-    if chunks:
-        bm25_retriever.build_index(chunks)
+    bm25_retriever.build_index(chunks)
 
     hybrid_retriever = HybridRetriever(
         vector_retriever=semantic_retriever,
@@ -56,13 +55,13 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="AI Assistant",
-    summary="Production-ready AI assistant",
+    summary="Modular AI assistant with chat and RAG workflows",
     description=(
-        "A production-ready AI assistant built from scratch with a modular "
-        "architecture, supporting chat, RAG, agent workflows, tool calling, "
-        "and modern LLM integrations."
+        "An AI assistant built from scratch with a modular architecture. "
+        "The HTTP API exposes chat and RAG workflows with hybrid retrieval "
+        "over PostgreSQL + pgvector and provider-independent LLM access."
     ),
-    version="1.0.0",
+    version="1.2.0",
     contact={
         "name": "Kutlay",
     },

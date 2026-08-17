@@ -12,7 +12,10 @@ The retrieval system consists of:
 - `TextSplitter`
 - `Embedder`
 - `VectorStore`
-- `SemanticRetriever`
+- `SemanticRetriever`, `BM25Retriever`, and `HybridRetriever`
+- `SearchService`
+
+See [RAG Pipeline](../diagrams/rag-pipeline.md) for the diagram.
 
 
 
@@ -67,7 +70,7 @@ The assistant communicates with embedding providers exclusively through the `Bas
 
 ### MockEmbedder
 
-`MockEmbedder` is intended for development and testing.
+`MockEmbedder` is intended for testing only and is not used by the running application.
 
 Characteristics:
 
@@ -107,36 +110,48 @@ Characteristics:
 
 
 
-## SemanticRetriever
+## Retrievers
 
-SemanticRetrievers locate the most relevant document chunks for a query.
-
-They combine embedding generation and vector search while remaining independent from concrete providers.
+Retrievers locate the most relevant document chunks for a query.
 
 The assistant communicates through the `BaseRetriever` abstraction.
-
-### Dependencies
-
-- `BaseEmbedder`
-- `BaseVectorStore`
 
 ### Current Implementations
 
 - `SemanticRetriever`
+- `BM25Retriever`
+- `HybridRetriever` (used by the running application)
 
 ### Planned Implementations
 
-- `SemanticRetriever`
-- `HybridRetriever`
 - `MultiVectorRetriever`
 
 
 
 ### SemanticRetriever
 
-`SemanticRetriever` is intended for development and testing.
+`SemanticRetriever` embeds the query through a `BaseEmbedder` and performs a vector
+similarity search through a `BaseVectorStore`.
 
-It retrieves chunks by combining the configured embedder and vector store without relying on external retrieval systems.
+Dependencies:
+
+- `BaseEmbedder`
+- `BaseVectorStore`
+
+
+
+### BM25Retriever
+
+`BM25Retriever` performs lexical ranking over an in-memory BM25 index. The index is built
+at application startup from the chunks already stored in the vector store.
+
+
+
+### HybridRetriever
+
+`HybridRetriever` queries both the semantic and the BM25 retriever and merges the two
+result lists using reciprocal rank fusion. It is the retriever wired into the FastAPI
+application and is consumed by workflows through `SearchService`.
 
 
 

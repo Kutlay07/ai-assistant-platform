@@ -8,6 +8,10 @@ Each workflow implements a specific execution strategy while exposing the same i
 
 The Assistant delegates execution to the configured workflow without knowing its implementation details.
 
+The HTTP API constructs `ChatWorkflow` and `RAGWorkflow`. `AgentWorkflow` is available at
+library level and is covered by tests, but it is not exposed through an endpoint in the
+current release.
+
 
 
 ## BaseWorkflow
@@ -61,10 +65,10 @@ RAGWorkflow
 SearchService
    │
    ▼
-SemanticRetriever
+HybridRetriever (semantic + BM25, reciprocal rank fusion)
    │
    ▼
-Vector Store
+Embedder / Vector Store
    │
    ▼
 PromptBuilder

@@ -67,37 +67,50 @@ The project is developed incrementally through milestone-based releases. Each mi
 
 ## v0.9.0 — API & Serving Layer
 - FastAPI application foundation (`main.py`)
-- REST API endpoints (`/v1/chat`, `/v1/health`, `/v1/rag`)
+- REST API endpoints (`/api/v1/chat`, `/api/v1/health`, `/api/v1/rag`)
 - API request/response Pydantic schemas
-- Server-Sent Events (SSE) streaming foundation (`/v1/chat/stream`)
+- Chunked HTTP streaming foundation (`/api/v1/chat/stream`)
 
 ## v1.0.0 — Stable Production Release 🎉
 - **Full-Stack Monorepo Architecture**: Clean separation into `backend/` and `frontend/`
 - **Vite + React 19 UI**: Modern web chat interface with TailwindCSS v4
-- **Real-Time Streaming**: SSE streaming with live typing indicators
+- **Real-Time Streaming**: chunked HTTP streaming with live typing indicators
 - **Role-Aware Persistent Memory**: `FileMemory` with JSON storage and `system`, `user`, `assistant`, `tool` roles
-- **LLM Factory & Providers**: `LLMFactory` supporting `GroqProvider`, `LocalProvider`, and `MockLLM`
-- **Comprehensive Automated Testing**: 113 automated unit and integration tests passing 100%
+- **LLM Factory & Providers**: `create_llm()` supporting `GroqProvider`, `MockLLM`, and the `LocalProvider` placeholder
+- **Comprehensive Automated Testing**: unit and integration test suite across every core subsystem
 - **Release Documentation**: Complete architecture guides, ADRs, system diagrams, and quickstart guides
+
+## v1.1.0 — Hybrid Retrieval & Persistent Vector Storage
+- `PostgreSQLVectorStore` backed by pgvector
+- `SentenceTransformerEmbedder` for real 384-dimensional embeddings
+- `BM25Retriever` and `HybridRetriever` with reciprocal rank fusion
+- `SearchService` as the workflow-facing retrieval entry point
+
+## v1.2.0 — Conversation Summarization & Containerized Release
+- `SummarizingMemory` decorator with `LLMSummarizer` / `MockSummarizer`
+- Summary-aware prompt construction in the chat and RAG workflows
+- `RedisMemory` and `RedisCache` implementations (not wired into the running application)
+- Docker Compose stack: backend, frontend, PostgreSQL + pgvector
+- Minimal GitHub Actions CI running backend tests and the frontend build
 
 ---
 
 ## Future Directions
 
 ### Infrastructure
-- Containerized deployment with Docker and Docker Compose
 - Production deployment and orchestration
 - Structured logging, monitoring, and observability
 - Performance optimization, caching, and scalability
 
 ### AI Infrastructure
 - High-performance inference backends (e.g. vLLM)
-- Additional LLM providers and local model integrations
-- Production-grade vector databases (e.g. ChromaDB, Qdrant)
-- Distributed memory backends (e.g. Redis)
+- Additional LLM providers and local model integrations (`LocalProvider` is currently a placeholder)
+- Additional vector database backends (e.g. ChromaDB, Qdrant)
+- Wiring the existing Redis memory and cache implementations into the running application
 
 ### Agent Ecosystem
-- Model Context Protocol (MCP) integration
+- Exposing the agent workflows through the HTTP API
+- Completing the experimental Model Context Protocol (MCP) server
 - Advanced agent orchestration frameworks (e.g. LangGraph)
 - Integration with higher-level AI application frameworks (e.g. LangChain)
 - More advanced planning, reasoning, and multi-agent systems

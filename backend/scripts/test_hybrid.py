@@ -1,4 +1,11 @@
-from ai_assistant.api.dependencies import create_search_service
+"""Development helper: run a hybrid retrieval query against the knowledge base.
+
+Usage:
+    python scripts/test_hybrid.py "What is FastAPI?"
+"""
+
+import sys
+
 from ai_assistant.core.config import settings
 from ai_assistant.core.embedders.sentence_transformers_embedder import SentenceTransformerEmbedder
 from ai_assistant.core.retrievers import (
@@ -13,7 +20,7 @@ from ai_assistant.core.vector_stores.postgresql_vector_store import PostgreSQLVe
 embedder = SentenceTransformerEmbedder()
 
 vector_store = PostgreSQLVectorStore(
-    "postgresql://ai_assistant:ai_assistant@localhost:5432/ai_assistant"
+    settings.postgres_connection_string,
 )
 
 chunks = vector_store.get_all_chunks()
@@ -32,9 +39,9 @@ retriever = HybridRetriever(
     bm25_retriever=bm25_retriever,
 )
 
-results = retriever.retrieve(
-    "What is FastAPI?"
-)
+query = sys.argv[1] if len(sys.argv) > 1 else "What is FastAPI?"
+
+results = retriever.retrieve(query)
 
 for chunk in results:
     print(

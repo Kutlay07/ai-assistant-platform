@@ -14,9 +14,18 @@ This allows providers to be replaced without changing workflow implementations.
 
 `BaseLLM` defines the common interface implemented by every language model provider.
 
-All providers expose the same contract while hiding provider-specific implementation details.
+All providers expose the same contract while hiding provider-specific implementation details:
+
+- `generate(prompt) -> str`
+- `generate_with_tools(messages, tools) -> str | ToolCall`
+- `stream(prompt) -> Iterator[str]`
+
+Providers are constructed by the `create_llm()` factory, which selects an implementation
+from the `LLM_PROVIDER` environment variable.
 
 The assistant depends only on this abstraction.
+
+See [Provider Independence](../diagrams/provider-independence.md) for the diagram.
 
 
 
@@ -56,7 +65,9 @@ Characteristics:
 
 ## LocalProvider
 
-`LocalProvider` is reserved for future support of locally hosted language models.
+`LocalProvider` is a placeholder reserved for future support of locally hosted language
+models. Every method currently raises `NotImplementedError`; selecting `LLM_PROVIDER=local`
+will therefore fail at request time.
 
 Potential future integrations include:
 
