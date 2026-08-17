@@ -4,7 +4,7 @@ from typing import Any
 import json
 
 from .base_llm import BaseLLM
-from ..config import settings
+from ..config.settings import load_settings
 from ..models import (
     ToolCall,
     LLMMessage,
@@ -15,6 +15,8 @@ from ..models import (
 class GroqProvider(BaseLLM):
     
     def __init__(self):
+        settings = load_settings()
+
         api_key = settings.llm_api_key
         base_url = settings.llm_base_url
         model = settings.llm_model

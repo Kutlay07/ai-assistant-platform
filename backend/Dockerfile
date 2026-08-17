@@ -2,14 +2,14 @@ FROM python:3.13-slim AS builder
 
 WORKDIR /app
 
-# Dependencies önce
+# Dependency metadata first, so the layer is cached
 COPY pyproject.toml ./
 
+# CPU-only torch keeps the image reasonable
 RUN pip install --no-cache-dir \
     torch \
     --index-url https://download.pytorch.org/whl/cpu
 
-# Dependency metadata
 COPY src ./src
 
 RUN pip install --no-cache-dir -e .
@@ -21,6 +21,11 @@ WORKDIR /app
 
 COPY --from=builder /usr/local /usr/local
 COPY --from=builder /app /app
+
+# Application entry point (uvicorn imports `main:app`)
+COPY main.py ./
+
+RUN mkdir -p /app/data
 
 EXPOSE 8000
 
